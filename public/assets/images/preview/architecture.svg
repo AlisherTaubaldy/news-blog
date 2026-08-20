@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title id="title">Абстрактная архитектурная композиция</title>
+  <defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173f49"/><stop offset="1" stop-color="#7eb3ae"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#a)"/><circle cx="620" cy="90" r="170" fill="#d9b66f" opacity=".85"/><rect x="90" y="105" width="360" height="280" rx="22" fill="#fff" opacity=".93"/><rect x="130" y="150" width="280" height="28" rx="8" fill="#245b68"/><rect x="130" y="204" width="205" height="18" rx="7" fill="#afc8c7"/><rect x="130" y="242" width="245" height="18" rx="7" fill="#d5e1df"/><rect x="130" y="280" width="180" height="18" rx="7" fill="#d5e1df"/><path d="M520 240h180M610 150v180" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".72"/>
+</svg>

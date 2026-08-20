@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title id="title">Слои шаблонов интерфейса</title>
+  <defs><linearGradient id="b" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#b6d4d0"/><stop offset="1" stop-color="#e8d3aa"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#b)"/><rect x="105" y="80" width="480" height="290" rx="22" fill="#fff" opacity=".65"/><rect x="155" y="125" width="480" height="290" rx="22" fill="#fff" opacity=".75"/><rect x="205" y="170" width="480" height="250" rx="22" fill="#fff"/><circle cx="255" cy="215" r="14" fill="#d9b66f"/><rect x="290" y="203" width="250" height="24" rx="7" fill="#245b68"/><rect x="245" y="270" width="400" height="95" rx="12" fill="#d9e8e6"/>
+</svg>
