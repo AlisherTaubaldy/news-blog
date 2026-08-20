@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      APP_ENV: "${APP_ENV:-development}"
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: "${MYSQL_DATABASE:-news_blog}"
+      DB_USER: "${MYSQL_USER:-news_user}"
+      DB_PASSWORD: "${MYSQL_PASSWORD:-news_password}"
+    volumes:
+      - .:/var/www/html
+      - vendor:/var/www/html/vendor
+      - smarty_storage:/var/www/html/storage/smarty
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-news_blog}"
+      MYSQL_USER: "${MYSQL_USER:-news_user}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-news_password}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root_password}"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  smarty_storage:
+  vendor:

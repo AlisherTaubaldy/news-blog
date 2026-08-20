@@ -1,0 +1,11 @@
+/.env
+/.idea/
+/.vscode/
+/vendor/
+/storage/smarty/cache/*
+/storage/smarty/compile/*
+/PLAN.md
+/Снимок экрана*.png
+
+!/storage/smarty/cache/.gitkeep
+!/storage/smarty/compile/.gitkeep
