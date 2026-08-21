@@ -16,14 +16,14 @@ services:
       - vendor:/var/www/html/vendor
       - smarty_storage:/var/www/html/storage/smarty
     depends_on:
-      db:
-        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   db:
     image: mysql:8.4
     ports:
-      - "${MYSQL_PORT:-3306}:3306"
+      - "127.0.0.1:${MYSQL_PORT:-3306}:3306"
     environment:
       MYSQL_DATABASE: "${MYSQL_DATABASE:-news_blog}"
       MYSQL_USER: "${MYSQL_USER:-news_user}"
@@ -31,7 +31,9 @@ services:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root_password}"
     command:
       - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+00:00
+      - --sql-mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -45,6 +47,25 @@ services:
       retries: 20
       start_period: 20s
     restart: unless-stopped
+
+  db-init:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-news_blog}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root_password}"
+    volumes:
+      - ./database/migrations:/migrations:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - sh
+      - -ec
+      - >-
+        mysql --protocol=TCP --host=db --user=root
+        --password="$$MYSQL_ROOT_PASSWORD" "$$MYSQL_DATABASE"
+        < /migrations/001_initial_schema.sql
+    restart: "no"
 
 volumes:
   mysql_data:

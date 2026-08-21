@@ -2,6 +2,8 @@
 /.idea/
 /.vscode/
 /vendor/
+/database/dumps/
+/storage/logs/
 /storage/smarty/cache/*
 /storage/smarty/compile/*
 /PLAN.md
