@@ -7,6 +7,7 @@
         "php": "^8.1",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
+        "fakerphp/faker": "^1.24",
         "smarty/smarty": "^5.5"
     },
     "autoload": {
@@ -19,6 +20,7 @@
         "sort-packages": true
     },
     "scripts": {
-        "check": "php -l public/index.php"
+        "check": "php -l public/index.php",
+        "seed": "php database/seeders/seed.php"
     }
 }
