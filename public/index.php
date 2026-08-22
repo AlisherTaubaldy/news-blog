@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Application\ArticlePageService;
+use App\Application\BlogPageService;
+use App\Application\CategoryPageService;
+use App\Application\HomePageService;
+use App\Infrastructure\Database\ConnectionFactory;
+use App\Infrastructure\Database\PdoArticleRepository;
+use App\Infrastructure\Database\PdoCategoryRepository;
 use App\Infrastructure\View\SmartyViewRenderer;
 use App\Presentation\Http\Controller\BlogController;
 use App\Presentation\Http\Controller\CategoryController;
@@ -20,11 +27,21 @@ $smarty->setCompileDir($root . '/storage/smarty/compile');
 $smarty->setCacheDir($root . '/storage/smarty/cache');
 $smarty->setEscapeHtml(true);
 
-$previewData = require $root . '/resources/fixtures/design-preview.php';
+$pdo = ConnectionFactory::createFromEnvironment();
+$articleRepository = new PdoArticleRepository($pdo);
+$categoryRepository = new PdoCategoryRepository($pdo);
+
 $view = new SmartyViewRenderer($smarty);
-$homeController = new HomeController($view, $previewData);
-$blogController = new BlogController($view, $previewData);
-$categoryController = new CategoryController($view, $previewData);
+$homeController = new HomeController($view, new HomePageService($categoryRepository, $articleRepository));
+$blogController = new BlogController(
+    $view,
+    new BlogPageService($articleRepository),
+    new ArticlePageService($articleRepository),
+);
+$categoryController = new CategoryController(
+    $view,
+    new CategoryPageService($categoryRepository, $articleRepository),
+);
 
 $router = new Router();
 $router
@@ -41,8 +58,8 @@ try {
 } catch (MethodNotAllowedException $exception) {
     http_response_code(405);
     header('Allow: ' . implode(', ', $exception->allowedMethods()));
-    $view->render('pages/errors/404.tpl', $previewData + ['currentPage' => '']);
+    $view->render('pages/errors/404.tpl', ['currentPage' => '']);
 } catch (RouteNotFoundException) {
     http_response_code(404);
-    $view->render('pages/errors/404.tpl', $previewData + ['currentPage' => '']);
+    $view->render('pages/errors/404.tpl', ['currentPage' => '']);
 }

@@ -4,29 +4,42 @@ declare(strict_types=1);
 
 namespace App\Presentation\Http\Controller;
 
+use App\Application\CategoryPageService;
 use App\Presentation\Http\View\ViewRendererInterface;
 
 final readonly class CategoryController
 {
-    /** @param array<string, mixed> $previewData */
+    use RendersNotFoundPage;
+
     public function __construct(
         private ViewRendererInterface $view,
-        private array $previewData,
+        private CategoryPageService $categoryPageService,
     ) {
     }
 
     /** @param array<string, string> $parameters */
     public function index(array $parameters = []): void
     {
-        $this->view->render('pages/categories.tpl', $this->previewData + ['currentPage' => 'categories']);
+        $data = $this->categoryPageService->getIndexViewData();
+
+        $this->view->render('pages/categories.tpl', $data + ['currentPage' => 'categories']);
     }
 
     /** @param array<string, string> $parameters */
     public function show(array $parameters): void
     {
-        $this->view->render('pages/category.tpl', $this->previewData + [
-            'currentPage' => 'category',
-            'requestedSlug' => $parameters['slug'],
-        ]);
+        $data = $this->categoryPageService->getShowViewData(
+            $parameters['slug'],
+            is_string($_GET['sort'] ?? null) ? $_GET['sort'] : null,
+            is_string($_GET['page'] ?? null) ? $_GET['page'] : null,
+        );
+
+        if ($data === null) {
+            $this->renderNotFound();
+
+            return;
+        }
+
+        $this->view->render('pages/category.tpl', $data + ['currentPage' => 'category']);
     }
 }

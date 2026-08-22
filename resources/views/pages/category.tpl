@@ -11,7 +11,7 @@
     </section>
     <section class="container listing-page">
         <div class="listing-page__toolbar">
-            <p>Найдено 6 статей</p>
+            <p>Найдено {$totalCount} статей</p>
             {include file="partials/sorting.tpl" sorting=$sorting}
         </div>
         {include file="partials/article-grid.tpl" articles=$articles}
